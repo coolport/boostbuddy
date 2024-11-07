@@ -27,7 +27,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BoostBuddy!!!!!!!'),
+        title: const Text('BoostBuddy!!!'),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Column(
