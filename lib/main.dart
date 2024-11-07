@@ -27,7 +27,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Header'),
+        title: const Text('BoostBuddy!!!!!!!'),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Column(
@@ -38,14 +38,15 @@ class MyHomePage extends StatelessWidget {
             color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
             child: const Center(
               child: Text(
-                'This is a section with some text and a background color.',
+                'label this, add color and image',
                 style: TextStyle(fontSize: 18),
                 textAlign: TextAlign.center,
               ),
             ),
           ),
           // Spacer to separate sections and allocate space
-          const Spacer(),
+          // visualize space for habits box later
+          const Spacer(), const Spacer(),
           // Typeable box
           Container(
             padding: const EdgeInsets.all(16.0),
