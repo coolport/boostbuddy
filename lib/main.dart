@@ -54,6 +54,7 @@ class MyHomePage extends StatelessWidget {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Type something here...',
+                
               ),
             ),
           ),
