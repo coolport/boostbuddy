@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'quote_fetch.dart';  // Import the QuoteService class
+import 'quote_fetch.dart';  
 
 void main() {
   runApp(const MyApp());
@@ -54,10 +54,10 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
       appBar: AppBar(
         title: const Text("BoostBuddy"),
         actions: [
-          // Add a reload button in the app bar to trigger quote reloading
+          // reload
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: fetchQuote, // Trigger quote reloading
+            onPressed: fetchQuote, // call fetchQuote() on press
           ),
         ],
       ),
@@ -76,7 +76,7 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
                 ),
                 // Quote overlay
                 Container(
-                  color: Colors.black.withOpacity(0.4), // Dark overlay for readability
+                  color: Colors.black.withOpacity(0.4), 
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Column(
@@ -122,7 +122,8 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
                   ),
                   const SizedBox(height: 10),
                   // Sample list of habits/tasks
-                  //for examples only, implementation will not be like this obv
+                  //for examples only
+                  //need n dynamic
                   Expanded(
                     child: ListView(
                       children: [
@@ -146,7 +147,6 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
                           leading: Checkbox(value: false, onChanged: (_) {}),
                           title: const Text('user notifications, styling, etcetcetc'),
                         )
-                        // Add more ListTiles for tasks
                       ],
                     ),
                   ),
