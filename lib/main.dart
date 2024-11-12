@@ -10,51 +10,104 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Customized Layout',
+      title: 'Motivator App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const MotivatorHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+class MotivatorHomePage extends StatelessWidget {
+  const MotivatorHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BoostBuddy!!!'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
       body: Column(
         children: [
-          // Section with background color and text
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
-            child: const Center(
-              child: Text(
-                'label this, add color and image',
-                style: TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
+          // Quote Section with background image
+          Expanded(
+            flex: 2,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Background image
+                Image.asset(
+                  'assets/mtnshadow.jpg', // Replace with your image asset path
+                  fit: BoxFit.cover,
+                ),
+                // Quote overlay
+                Container(
+                  color: Colors.black.withOpacity(0.4), // Dark overlay for readability
+                  padding: const EdgeInsets.all(16.0),
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: [
+                        Text(
+                          '"Your daily motivational quote here!"', // Fetch and display quote text from API
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          '- Author', // Fetch and display author from API
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          // Spacer to separate sections and allocate space
-          // visualize space for habits box later
-          const Spacer(), const Spacer(),
-          // Typeable box
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child: const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Type something here...',
-                
+          // Habit Tracker / To-Do List Section
+          Expanded(
+            flex: 3,
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Habit Tracker / To-Do List',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  // Sample list of habits/tasks
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        ListTile(
+                          leading: Checkbox(value: false, onChanged: (_) {}),
+                          title: const Text('Exercise for 30 mins'),
+                        ),
+                        ListTile(
+                          leading: Checkbox(value: false, onChanged: (_) {}),
+                          title: const Text('Read 10 pages of a book'),
+                        ),
+                        ListTile(
+                          leading: Checkbox(value: false, onChanged: (_) {}),
+                          title: const Text('Meditate for 10 mins'),
+                        ),
+                        // Add more ListTiles for tasks
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -63,4 +116,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-

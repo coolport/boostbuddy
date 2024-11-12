@@ -1,5 +1,5 @@
 Future<String> fetchData() {
-  return Future.delayed(Duration(seconds: 2), () => 'Data loaded');
+  return Future.delayed(const Duration(seconds: 2), () => 'Data loaded');
 }
 
 void main() {
@@ -8,3 +8,5 @@ void main() {
   });
   print('Fetching data...'); // Runs immediately
 }
+
+//fetchData() returns a Future, .then() is used to handle the result once ready
