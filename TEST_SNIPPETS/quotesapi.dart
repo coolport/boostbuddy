@@ -22,6 +22,7 @@ void main() async {
 
   var headers = { 
     'X-Api-Key': '22Sw/FqKs4++B+lC243/VQ==xiOpF8RKMO5PxxLI'
+    //public, dosnt matter for now
   };
 
   final urlQuotesResponse = await http.get(urlQuotes, headers: headers );
