@@ -1,5 +1,3 @@
-// main.dart
-
 import 'package:flutter/material.dart';
 import 'quote_fetch.dart';  // Import the QuoteService class
 
@@ -19,6 +17,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const MotivatorHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -41,8 +40,7 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
   }
 
   Future<void> fetchQuote() async {
-    // Use the QuoteService class to fetch the quote
-    var quoteData = await QuoteService.fetchQuote();
+    var quoteData = await QuotesFetch.fetchQuote();
     
     setState(() {
       quote = quoteData['quote']!;
