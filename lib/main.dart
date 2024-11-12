@@ -1,4 +1,7 @@
+// main.dart
+
 import 'package:flutter/material.dart';
+import 'quote_fetch.dart';  // Import the QuoteService class
 
 void main() {
   runApp(const MyApp());
@@ -10,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Motivator App',
+      title: 'BoostBuddy',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
@@ -20,12 +23,46 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MotivatorHomePage extends StatelessWidget {
+class MotivatorHomePage extends StatefulWidget {
   const MotivatorHomePage({super.key});
+
+  @override
+  _MotivatorHomePageState createState() => _MotivatorHomePageState();
+}
+
+class _MotivatorHomePageState extends State<MotivatorHomePage> {
+  String quote = "Loading quote...";
+  String author = "Loading...";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchQuote();
+  }
+
+  Future<void> fetchQuote() async {
+    // Use the QuoteService class to fetch the quote
+    var quoteData = await QuoteService.fetchQuote();
+    
+    setState(() {
+      quote = quoteData['quote']!;
+      author = quoteData['author']!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("BoostBuddy"),
+        actions: [
+          // Add a reload button in the app bar to trigger quote reloading
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: fetchQuote, // Trigger quote reloading
+          ),
+        ],
+      ),
       body: Column(
         children: [
           // Quote Section with background image
@@ -43,14 +80,13 @@ class MotivatorHomePage extends StatelessWidget {
                 Container(
                   color: Colors.black.withOpacity(0.4), // Dark overlay for readability
                   padding: const EdgeInsets.all(16.0),
-                  child: const Center(
+                  child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-
                       children: [
                         Text(
-                          '"Your daily motivational quote here!"', // Fetch and display quote text from API
-                          style: TextStyle(
+                          '"$quote"', // Display the fetched quote
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                             fontStyle: FontStyle.italic,
@@ -58,10 +94,10 @@ class MotivatorHomePage extends StatelessWidget {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
-                          '- Author', // Fetch and display author from API
-                          style: TextStyle(
+                          '- $author', // Display the author of the quote
+                          style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 18,
                           ),
@@ -88,6 +124,7 @@ class MotivatorHomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   // Sample list of habits/tasks
+                  //for examples only, implementation will not be like this obv
                   Expanded(
                     child: ListView(
                       children: [
@@ -97,12 +134,20 @@ class MotivatorHomePage extends StatelessWidget {
                         ),
                         ListTile(
                           leading: Checkbox(value: false, onChanged: (_) {}),
-                          title: const Text('Read 10 pages of a book'),
+                          title: const Text('fetch dynamic bg images with Image.network()'),
                         ),
                         ListTile(
                           leading: Checkbox(value: false, onChanged: (_) {}),
-                          title: const Text('Meditate for 10 mins'),
+                          title: const Text('change appbar to add stories tab'),
                         ),
+                        ListTile(
+                          leading: Checkbox(value: false, onChanged: (_) {}),
+                          title: const Text('make this list dynamic'),
+                        ),
+                        ListTile(
+                          leading: Checkbox(value: false, onChanged: (_) {}),
+                          title: const Text('user notifications, styling, etcetcetc'),
+                        )
                         // Add more ListTiles for tasks
                       ],
                     ),
