@@ -32,6 +32,7 @@ class MotivatorHomePage extends StatefulWidget {
 class _MotivatorHomePageState extends State<MotivatorHomePage> {
   String quote = "Loading quote...";
   String author = "Loading...";
+  final List<Map<String, dynamic>> _tasks = [];
 
   @override
   void initState() {
@@ -41,11 +42,47 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
 
   Future<void> fetchQuote() async {
     var quoteData = await QuotesFetch.fetchQuote();
-    
     setState(() {
       quote = quoteData['quote']!;
       author = quoteData['author']!;
     });
+  }
+
+  void _addTask() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String taskText = '';
+        return AlertDialog(
+          title: const Text('Add a Task'),
+          content: TextField(
+            onChanged: (value) {
+              taskText = value;
+            },
+            decoration: const InputDecoration(hintText: "Enter your task"),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Add'),
+              onPressed: () {
+                if (taskText.isNotEmpty) {
+                  setState(() {
+                    _tasks.add({'title': taskText, 'completed': false});
+                  });
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -54,36 +91,33 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
       appBar: AppBar(
         title: const Text("BoostBuddy"),
         actions: [
-          // reload
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: fetchQuote, // call fetchQuote() on press
+            onPressed: fetchQuote,
           ),
         ],
       ),
       body: Column(
         children: [
-          // Quote Section with background image
+          // Quote Section
           Expanded(
             flex: 2,
             child: Stack(
               fit: StackFit.expand,
               children: [
-                // Background image
                 Image.asset(
-                  'assets/mtnshadow.jpg', // Replace with your image asset path
+                  'assets/mtnshadow.jpg',
                   fit: BoxFit.cover,
                 ),
-                // Quote overlay
                 Container(
-                  color: Colors.black.withOpacity(0.4), 
+                  color: Colors.black.withOpacity(0.4),
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '"$quote"', // Display the fetched quote
+                          '"$quote"',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -94,7 +128,7 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          '- $author', // Display the author of the quote
+                          '- $author',
                           style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 18,
@@ -108,7 +142,7 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
               ],
             ),
           ),
-          // Habit Tracker / To-Do List Section
+          // Dynamic To-Do List
           Expanded(
             flex: 3,
             child: Container(
@@ -121,33 +155,38 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  // Sample list of habits/tasks
-                  //for examples only
-                  //need n dynamic
                   Expanded(
-                    child: ListView(
-                      children: [
-                        ListTile(
-                          leading: Checkbox(value: false, onChanged: (_) {}),
-                          title: const Text('Exercise for 30 mins'),
-                        ),
-                        ListTile(
-                          leading: Checkbox(value: false, onChanged: (_) {}),
-                          title: const Text('fetch dynamic bg images with Image.network()'),
-                        ),
-                        ListTile(
-                          leading: Checkbox(value: false, onChanged: (_) {}),
-                          title: const Text('change appbar to add stories tab'),
-                        ),
-                        ListTile(
-                          leading: Checkbox(value: false, onChanged: (_) {}),
-                          title: const Text('make this list dynamic'),
-                        ),
-                        ListTile(
-                          leading: Checkbox(value: false, onChanged: (_) {}),
-                          title: const Text('user notifications, styling, etcetcetc'),
-                        )
-                      ],
+                    child: ListView.builder(
+                      itemCount: _tasks.length,
+                      itemBuilder: (context, index) {
+                        final task = _tasks[index];
+                        return ListTile(
+                          leading: Checkbox(
+                            value: task['completed'],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _tasks[index]['completed'] = value!;
+                              });
+                            },
+                          ),
+                          title: Text(
+                            task['title'],
+                            style: TextStyle(
+                              decoration: task['completed']
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                _tasks.removeAt(index);
+                              });
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -155,6 +194,10 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addTask,
+        child: const Icon(Icons.add),
       ),
     );
   }
