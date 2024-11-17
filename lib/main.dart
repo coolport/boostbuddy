@@ -151,7 +151,7 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Habit Tracker / To-Do List',
+                    'TO-DO LIST ETC',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
