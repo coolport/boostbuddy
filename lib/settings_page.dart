@@ -66,6 +66,7 @@ class SettingsPage extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
+            // Dark Mode Toggle
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -78,9 +79,24 @@ class SettingsPage extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
+            // Notifications Toggle
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Enable Notifications'),
+                Switch(
+                  value: appState.notificationsEnabled,
+                  onChanged: (value) {
+                    appState.toggleNotifications(value);
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 }
+

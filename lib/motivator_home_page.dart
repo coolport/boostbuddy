@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'quote_fetch.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MotivatorHomePage extends StatelessWidget {
   const MotivatorHomePage({super.key});
@@ -99,25 +101,29 @@ class HabitTracker extends StatelessWidget {
               itemCount: appState.habits.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: Checkbox(
-                    value: appState.habits[index]['isChecked'], // Track the checkbox state
-                    onChanged: (bool? value) {
-                      // Toggle the checkbox state when clicked
-                      appState.toggleHabitCheck(index, value ?? false);
-                    },
-                  ),
-                  title: Text(
-                    appState.habits[index]['title'],
-                    style: TextStyle(
-                      decoration: appState.habits[index]['isChecked']
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                    ),
-                  ),
+                  title: Text(appState.habits[index]['title']),
+                  leading: const Icon(Icons.notifications),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () => appState.removeHabit(index),
                   ),
+                  onTap: () async {
+                    DateTime? selectedTime = await _pickTime(context);
+                    if (selectedTime != null) {
+                      appState.scheduleNotification(
+                        appState.habits[index]['title'],
+                        "Reminder: ${appState.habits[index]['title']}",
+                        selectedTime,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Notification scheduled for "${appState.habits[index]['title']}" at ${DateFormat('hh:mm a').format(selectedTime)}',
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 );
               },
             ),
@@ -155,5 +161,17 @@ class HabitTracker extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<DateTime?> _pickTime(BuildContext context) async {
+    final now = DateTime.now();
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(now),
+    );
+    if (time != null) {
+      return DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    }
+    return null;
   }
 }
