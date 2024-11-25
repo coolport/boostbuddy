@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'quote_fetch.dart';  
+import 'quote_fetch.dart';
+import 'stories_page.dart'; // Import the separate file for the StoriesPage
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +13,55 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BoostBuddy',
-      theme: ThemeData.dark(
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const MotivatorHomePage(),
+      home: const MainPage(),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    const MotivatorHomePage(),
+    const StoriesPage(), // Reference to the StoriesPage
+  ];
+
+  void _onNavBarTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onNavBarTap,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Motivator',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Stories',
+          ),
+        ],
+      ),
     );
   }
 }
@@ -99,7 +143,6 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
       ),
       body: Column(
         children: [
-          // Quote Section
           Expanded(
             flex: 2,
             child: Stack(
@@ -142,7 +185,6 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
               ],
             ),
           ),
-          // Dynamic To-Do List
           Expanded(
             flex: 3,
             child: Container(
@@ -151,7 +193,7 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'TO-DO LIST ETC',
+                    'Habit Tracker / To-Do List',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
