@@ -5,31 +5,16 @@ class StoriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> stories = [
-      "Story 1: Overcoming Adversity",
-      "Story 2: Rising Above Challenges",
-      "Story 3: Inspiring Journey of Success",
-      "Story 4: The Power of Persistence",
-      "Story 5: Dreams Turned into Reality",
-    ];
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Inspiring Stories"),
+        title: const Text('Inspiring Stories'),
       ),
       body: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: stories.length,
+        itemCount: 10,
         itemBuilder: (context, index) {
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                stories[index],
-                style: const TextStyle(fontSize: 18),
-              ),
-            ),
+          return ListTile(
+            title: Text('Story Title ${index + 1}'),
+            subtitle: Text('This is an inspiring story #${index + 1}.'),
           );
         },
       ),

@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
-import 'quote_fetch.dart';
-import 'stories_page.dart'; // Import the separate file for the StoriesPage
+import 'package:provider/provider.dart';
+import 'app_state.dart';
+import 'motivator_home_page.dart';
+import 'stories_page.dart';
+import 'settings_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AppState(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -27,219 +35,36 @@ class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
   @override
-  _MainPageState createState() => _MainPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  int _currentIndex = 0;
+  int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const MotivatorHomePage(),
-    const StoriesPage(), // Reference to the StoriesPage
+  static const List<Widget> _pages = [
+    MotivatorHomePage(),
+    StoriesPage(),
+    SettingsPage(),
   ];
 
-  void _onNavBarTap(int index) {
+  void _onItemTapped(int index) {
     setState(() {
-      _currentIndex = index;
+      _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _onNavBarTap,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Motivator',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Stories',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.lightbulb), label: 'Motivator'),
+          BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Stories'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
-      ),
-    );
-  }
-}
-
-class MotivatorHomePage extends StatefulWidget {
-  const MotivatorHomePage({super.key});
-
-  @override
-  _MotivatorHomePageState createState() => _MotivatorHomePageState();
-}
-
-class _MotivatorHomePageState extends State<MotivatorHomePage> {
-  String quote = "Loading quote...";
-  String author = "Loading...";
-  final List<Map<String, dynamic>> _tasks = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchQuote();
-  }
-
-  Future<void> fetchQuote() async {
-    var quoteData = await QuotesFetch.fetchQuote();
-    setState(() {
-      quote = quoteData['quote']!;
-      author = quoteData['author']!;
-    });
-  }
-
-  void _addTask() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        String taskText = '';
-        return AlertDialog(
-          title: const Text('Add a Task'),
-          content: TextField(
-            onChanged: (value) {
-              taskText = value;
-            },
-            decoration: const InputDecoration(hintText: "Enter your task"),
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Add'),
-              onPressed: () {
-                if (taskText.isNotEmpty) {
-                  setState(() {
-                    _tasks.add({'title': taskText, 'completed': false});
-                  });
-                }
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("BoostBuddy"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: fetchQuote,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.asset(
-                  'assets/mtnshadow.jpg',
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                  color: Colors.black.withOpacity(0.4),
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '"$quote"',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          '- $author',
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 18,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Habit Tracker / To-Do List',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _tasks.length,
-                      itemBuilder: (context, index) {
-                        final task = _tasks[index];
-                        return ListTile(
-                          leading: Checkbox(
-                            value: task['completed'],
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _tasks[index]['completed'] = value!;
-                              });
-                            },
-                          ),
-                          title: Text(
-                            task['title'],
-                            style: TextStyle(
-                              decoration: task['completed']
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                            ),
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              setState(() {
-                                _tasks.removeAt(index);
-                              });
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addTask,
-        child: const Icon(Icons.add),
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
