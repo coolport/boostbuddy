@@ -1,29 +1,35 @@
 import 'package:flutter/material.dart';
 
 class AppState extends ChangeNotifier {
-  // Quote-related state
-  String _quote = "Loading quote...";
-  String _author = "Loading...";
-  String get quote => _quote;
-  String get author => _author;
+  String quote = "Loading quote...";
+  String author = "Loading...";
+  
+  List<Map<String, dynamic>> habits = [
+    {'title': 'Exercise for 30 mins', 'isChecked': false},
+    {'title': 'Fetch dynamic background images', 'isChecked': false},
+    {'title': 'Change AppBar to add Stories tab', 'isChecked': false},
+    {'title': 'Make this list dynamic', 'isChecked': false},
+    {'title': 'Add user notifications', 'isChecked': false},
+  ];
 
   void updateQuote(String newQuote, String newAuthor) {
-    _quote = newQuote;
-    _author = newAuthor;
+    quote = newQuote;
+    author = newAuthor;
     notifyListeners();
   }
 
-  // Habit tracker state
-  final List<String> _habits = [];
-  List<String> get habits => List.unmodifiable(_habits);
-
-  void addHabit(String habit) {
-    _habits.add(habit);
+  void addHabit(String habitTitle) {
+    habits.add({'title': habitTitle, 'isChecked': false});
     notifyListeners();
   }
 
   void removeHabit(int index) {
-    _habits.removeAt(index);
+    habits.removeAt(index);
+    notifyListeners();
+  }
+
+  void toggleHabitCheck(int index, bool isChecked) {
+    habits[index]['isChecked'] = isChecked;
     notifyListeners();
   }
 }

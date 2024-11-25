@@ -99,8 +99,21 @@ class HabitTracker extends StatelessWidget {
               itemCount: appState.habits.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: Checkbox(value: false, onChanged: (_) {}),
-                  title: Text(appState.habits[index]),
+                  leading: Checkbox(
+                    value: appState.habits[index]['isChecked'], // Track the checkbox state
+                    onChanged: (bool? value) {
+                      // Toggle the checkbox state when clicked
+                      appState.toggleHabitCheck(index, value ?? false);
+                    },
+                  ),
+                  title: Text(
+                    appState.habits[index]['title'],
+                    style: TextStyle(
+                      decoration: appState.habits[index]['isChecked']
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+                  ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () => appState.removeHabit(index),
