@@ -19,12 +19,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
     return MaterialApp(
       title: 'BoostBuddy',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData.dark(),
+      themeMode: appState.themeMode,
+
       home: const MainPage(),
       debugShowCheckedModeBanner: false,
     );
@@ -59,7 +63,7 @@ class _MainPageState extends State<MainPage> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.lightbulb), label: 'Motivator'),
+          BottomNavigationBarItem(icon: Icon(Icons.lightbulb), label: 'Homepage'),
           BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Stories'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],

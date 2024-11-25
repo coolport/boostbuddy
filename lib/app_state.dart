@@ -4,6 +4,14 @@ class AppState extends ChangeNotifier {
   String quote = "Loading quote...";
   String author = "Loading...";
   
+  ThemeMode _themeMode = ThemeMode.light;
+  ThemeMode get themeMode => _themeMode;
+
+  void toggleTheme() {
+    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
+  }
+
   List<Map<String, dynamic>> habits = [
     {'title': 'Exercise for 30 mins', 'isChecked': false},
     {'title': 'Fetch dynamic background images', 'isChecked': false},
