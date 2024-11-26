@@ -44,6 +44,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -51,6 +52,23 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
+
+    // Function to trigger the test notification
+    void sendTestNotification() {
+      FlutterLocalNotificationsPlugin().show(
+        0,
+        "Test Notification",
+        "This is a test notification",
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'test_channel',
+            'Test Notifications',
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -93,10 +111,19 @@ class SettingsPage extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
+            // Test Notification Button
+            Center(
+              child: ElevatedButton(
+                onPressed: sendTestNotification,  // Trigger the notification when pressed
+                child: const Text('Send Test Notification'),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
