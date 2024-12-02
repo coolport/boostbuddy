@@ -70,6 +70,60 @@ class SettingsPage extends StatelessWidget {
       );
     }
 
+    // Function to show the feedback form
+    void showFeedbackForm(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 16,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "What could be improved with the app experience?",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      hintText: "Write your feedback here...",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          // You can process the feedback here (e.g., send it to a server)
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: const Text("Submit"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -119,11 +173,20 @@ class SettingsPage extends StatelessWidget {
                 child: const Text('Send Test Notification'),
               ),
             ),
+            const SizedBox(height: 20),
+            // Feedback Button
+            Center(
+              child: ElevatedButton(
+                onPressed: () => showFeedbackForm(context), // Show the feedback form when pressed
+                child: const Text('Provide Feedback'),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
 
