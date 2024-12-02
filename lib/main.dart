@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'app_state.dart';
 import 'motivator_home_page.dart';
 import 'stories_page.dart';
 import 'settings_page.dart';
 
-void main() {
+// Initialize the notifications plugin
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize timezone data
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('America/Detroit')); // Update with your time zone
+
+  // Notification setup
+  const AndroidInitializationSettings androidSettings =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initSettings =
+      InitializationSettings(android: androidSettings);
+
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => AppState(),
@@ -28,7 +50,6 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark(),
       themeMode: appState.themeMode,
-
       home: const MainPage(),
       debugShowCheckedModeBanner: false,
     );
@@ -73,3 +94,28 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
+// Helper function to schedule a notification
+Future<void> scheduleNotification(
+    String title, String body, DateTime scheduledTime) async {
+  // Convert the scheduledTime to TZDateTime
+  final tzScheduledTime = tz.TZDateTime.from(scheduledTime, tz.local);
+
+  await flutterLocalNotificationsPlugin.zonedSchedule(
+    0, // Unique ID for the notification
+    title,
+    body,
+    tzScheduledTime,
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'habit_reminder_channel',
+        'Habit Reminders',
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+    ),
+    androidScheduleMode: AndroidScheduleMode.exact, // Specify the schedule mode
+    uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+  );
+}
+

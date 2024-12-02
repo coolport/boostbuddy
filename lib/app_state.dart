@@ -1,8 +1,10 @@
+import 'dart:io'; // Required for platform checks
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:permission_handler/permission_handler.dart';
 
 class AppState extends ChangeNotifier {
   String quote = "Loading quote...";
@@ -56,6 +58,7 @@ class AppState extends ChangeNotifier {
   AppState() {
     _initNotifications();
     tz.initializeTimeZones(); // Initialize the time zones
+    _requestPermissionsOnLaunch(); // Request permissions when the app starts
   }
 
   Future<void> _initNotifications() async {
@@ -72,28 +75,44 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> scheduleNotification(String title, String body, DateTime scheduledTime) async {
-    // Convert DateTime to TZDateTime
-    tz.TZDateTime tzDateTime = tz.TZDateTime.from(scheduledTime, tz.local);
+  // Request permissions when the app starts (for Android 12+)
+  Future<void> _requestPermissionsOnLaunch() async {
+    if (Platform.isAndroid) {
+      // Request notification permission on Android 12+
+      var status = await Permission.notification.status;
+      if (status.isDenied) {
+        await Permission.notification.request();
+      }
+    }
+  }
 
-    // Schedule notification
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      title,
-      body,
-      tzDateTime, // Use TZDateTime instead of DateTime
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'habit_reminder_channel',
-          'Habit Reminders',
-          importance: Importance.high,
-          priority: Priority.high,
+  Future<void> scheduleNotification(String title, String body, DateTime scheduledTime) async {
+    // Check if the app has permission to schedule exact alarms
+    if (await Permission.notification.isGranted) {
+      tz.TZDateTime tzDateTime = tz.TZDateTime.from(scheduledTime, tz.local);
+
+      // Schedule notification with the correct parameters
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        title,
+        body,
+        tzDateTime,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'habit_reminder_channel',
+            'Habit Reminders',
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
         ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exact, // Specify the schedule mode
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
+        androidScheduleMode: AndroidScheduleMode.exact, // Exact scheduling
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } else {
+      // Handle case where permission is not granted (optional)
+      print('Permission to schedule notifications is not granted');
+    }
   }
 }
 
