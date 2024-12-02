@@ -5,11 +5,18 @@ import 'quote_fetch.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class MotivatorHomePage extends StatelessWidget {
+class MotivatorHomePage extends StatefulWidget {
   const MotivatorHomePage({super.key});
 
-  Future<void> _fetchNewQuote(BuildContext context) async {
-    var quoteData = await QuotesFetch.fetchQuote();
+  @override
+  _MotivatorHomePageState createState() => _MotivatorHomePageState();
+}
+
+class _MotivatorHomePageState extends State<MotivatorHomePage> {
+  String _selectedCategory = 'happiness'; // Default category
+
+  Future<void> _fetchNewQuote(BuildContext context, String category) async {
+    var quoteData = await QuotesFetch.fetchQuote(category);
     context.read<AppState>().updateQuote(quoteData['quote']!, quoteData['author']!);
   }
 
@@ -21,9 +28,17 @@ class MotivatorHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("BoostBuddy"),
         actions: [
+          // 'How are you?' button to trigger the floating menu
+          IconButton(
+            icon: const Text('How are you?'),
+            onPressed: () {
+              _showMoodMenu(context);
+            },
+          ),
+          // Refresh icon
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => _fetchNewQuote(context),
+            onPressed: () => _fetchNewQuote(context, _selectedCategory),
           ),
         ],
       ),
@@ -77,6 +92,60 @@ class MotivatorHomePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Show the floating menu with dropdown
+  void _showMoodMenu(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('What are you in the mood for?'),
+          content: DropdownButton<String>(
+            value: _selectedCategory,
+            items: const [
+              DropdownMenuItem(
+                value: 'happiness',
+                child: Text('Happiness'),
+              ),
+              DropdownMenuItem(
+                value: 'business',
+                child: Text('Business'),
+              ),
+              DropdownMenuItem(
+                value: 'dating',
+                child: Text('Dating'),
+              ),
+              DropdownMenuItem(
+                value: 'family',
+                child: Text('Family'),
+              ),
+              DropdownMenuItem(
+                value: 'god',
+                child: Text('God'),
+              ),
+              DropdownMenuItem(
+                value: 'love',
+                child: Text('Love'),
+              ),
+              DropdownMenuItem(
+                value: 'success',
+                child: Text('Success'),
+              ),
+            ],
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  _selectedCategory = newValue;
+                });
+                Navigator.pop(context); // Close the dialog
+                _fetchNewQuote(context, newValue); // Fetch new quote based on selected category
+              }
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -175,3 +244,4 @@ class HabitTracker extends StatelessWidget {
     return null;
   }
 }
+

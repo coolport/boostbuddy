@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class QuotesFetch {
-  static Future<Map<String, String>> fetchQuote() async {
-    final urlQuotes = Uri.parse('https://api.api-ninjas.com/v1/quotes?category=happiness');
+  static Future<Map<String, String>> fetchQuote(String category) async {
+    final urlQuotes = Uri.parse('https://api.api-ninjas.com/v1/quotes?category=$category');
     var headers = {
       'X-Api-Key': '22Sw/FqKs4++B+lC243/VQ==xiOpF8RKMO5PxxLI'
-      //publicized key... doesnt matter for now
     };
 
     final urlQuotesResponse = await http.get(urlQuotes, headers: headers);
