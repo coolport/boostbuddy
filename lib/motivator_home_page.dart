@@ -15,6 +15,7 @@ class MotivatorHomePage extends StatefulWidget {
 class _MotivatorHomePageState extends State<MotivatorHomePage> {
   String _selectedCategory = 'happiness'; // Default category
 
+  // Method to fetch new quote
   Future<void> _fetchNewQuote(BuildContext context, String category) async {
     var quoteData = await QuotesFetch.fetchQuote(category);
     context.read<AppState>().updateQuote(quoteData['quote']!, quoteData['author']!);
@@ -23,6 +24,12 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
+    final themeBrightness = Theme.of(context).brightness;  // Get the current theme mode
+
+    // Select image based on the theme
+    String backgroundImage = themeBrightness == Brightness.dark
+        ? 'assets/mtnshadow.jpg'  // Dark mode image
+        : 'assets/pexels-padrinan-19670.jpg';      // Light mode image
 
     return Scaffold(
       appBar: AppBar(
@@ -50,7 +57,7 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
               fit: StackFit.expand,
               children: [
                 Image.asset(
-                  'assets/mtnshadow.jpg',
+                  backgroundImage, // Use the selected image
                   fit: BoxFit.cover,
                 ),
                 Container(

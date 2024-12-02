@@ -13,7 +13,7 @@ class _StoriesPageState extends State<StoriesPage> {
   final List<Map<String, String>> stories = [
     {
       'title': 'The Brave Little Lion',
-      'content': 'OOnce upon a time in the jungle, there was a small lion who...Once upon a time in the jungle, there was a small lion who...Once upon a time in the jungle, there was a small lion who...Once upon a time in the jungle, there was a small lion who...Once upon a time in the jungle, there was a small lion who...Once upon a time in the jungle, there was a small lion who...Once upon a time in the jungle, there was a small lion who...Once upon a time in the jungle, there was a small lion who...Once upon a time in the jungle, there was a small lion who...nce upon a time in the jungle, there was a small lion who...',
+      'content': 'Once upon a time in the jungle, there was a small lion who... Once upon a time in the jungle, there was a small lion who...',
       'image': 'https://example.com/lion_image.jpg',
     },
     {
@@ -74,6 +74,7 @@ class _StoriesPageState extends State<StoriesPage> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,  // Updated to bodyText2
                       ),
                     ),
                   ),
@@ -84,7 +85,7 @@ class _StoriesPageState extends State<StoriesPage> {
                       story['content']!,
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black87,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,  // Updated to bodyText2
                       ),
                     ),
                   ),
