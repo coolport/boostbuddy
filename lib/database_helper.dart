@@ -38,7 +38,7 @@ class DatabaseHelper {
           '''CREATE TABLE feedback (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             feedback TEXT,
-            timestamp TEXT
+            timestamp INTEGER
           )''',
         );
       },
@@ -113,9 +113,19 @@ class DatabaseHelper {
     final db = await database;
     await db.insert(
       'feedback',
-      {'feedback': feedback, 'timestamp': DateTime.now().toString()},
+      {
+        'feedback': feedback,
+        'timestamp': DateTime.now().millisecondsSinceEpoch, // Store as integer timestamp (Unix time)
+      },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  // Fetch all feedbacks
+  static Future<List<Map<String, dynamic>>> getFeedback() async {
+    final db = await database;
+    var result = await db.query('feedback');
+    return result;
   }
 }
 

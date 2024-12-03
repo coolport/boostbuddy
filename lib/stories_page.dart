@@ -14,29 +14,29 @@ class _StoriesPageState extends State<StoriesPage> {
   // Sample list of stories
   final List<Map<String, String>> stories = [
     {
-      'title': 'The Brave Little Lion',
-      'content': 'Once upon a time in the jungle, there was a small lion who... Once upon a time in the jungle, there was a small lion who...',
-      'image': 'assets/mtnshadow.jpg',
+      'title': 'Oprah Winfrey - Rise to Fame',
+      'content': 'Oprah was told she wasn’t fit for television early in her career. She faced numerous setbacks, including being fired from her first TV job. Despite the odds, she built a media empire and became a global symbol of empowerment, proving that resilience can turn challenges into triumphs.',
+      'image': 'assets/oprah.jpg',
     },
     {
-      'title': 'The Curious Rabbit',
-      'content': 'In a quiet forest, a rabbit loved to explore. One day...',
-      'image': 'assets/mtnshadow.jpg',
+      'title': 'The Small Seed',
+      'content': 'A tiny seed, buried deep in the soil, dreamed of becoming a tree. Days turned into weeks, and slowly, it grew, breaking through the earth. It stood tall as a mighty oak, proud of its journey from a small seed to something grand.',
+      'image': 'assets/seed.jpeg',
     },
     {
-      'title': 'The Kind Elephant',
-      'content': 'An elephant known for her kindness helped all the animals in the jungle...',
-      'image': 'assets/mtnshadow.jpg',
+      'title': 'J.K. Rowlings Rejection Letters',
+      'content': 'Before Harry Potter became a global phenomenon, J.K. Rowling was rejected by 12 publishers. She was a single mother living on welfare, and her manuscript was nearly thrown out. Today, she’s one of the world’s most successful authors, proving that rejection is just a stepping stone to success.Before Harry Potter became a global phenomenon, J.K. Rowling was rejected by 12 publishers. She was a single mother living on welfare, and her manuscript was nearly thrown out. Today, she’s one of the world’s most successful authors, proving that rejection is just a stepping stone to success.',
+      'image': 'assets/jk.jpg',
     },
     {
-      'title': 'Whatever bro Kind Elephant',
-      'content': 'tesitngisifjsfsakflasfhlakehfijhasifjaifjaijiaj',
-      'image': 'assets/mtnshadow.jpg',
+      'title': 'On The Music That Is Silence',
+      'content': 'On a rainy afternoon, Olivia sat by the window, watching the drops race down the glass. There was no sound, but in the silence, she could hear music in her heart. The rhythm of the rain, the wind’s gentle whisper, and the distant hum of life—she realized that sometimes, the quietest moments are the most meaningful.',
+      'image': 'assets/music.jpg',
     },
     {
-      'title': 'Whatever bro Kind Elephant',
-      'content': 'tesitngisifjsfsakflasfhlakehfijhasifjaifjaijiaj',
-      'image': 'assets/mtnshadow.jpg',
+      'title': 'The Marathoner',
+      'content': 'After breaking both legs in a car accident, he crossed the finish line of his first marathon two years later—crawling.',
+      'image': 'assets/marathon.jpg',
     },
   ];
 

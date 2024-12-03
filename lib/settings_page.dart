@@ -89,6 +89,67 @@ class SettingsPage extends StatelessWidget {
       );
     }
 
+    // Function to show the submitted feedback
+    void showFeedbackList(BuildContext context) async {
+      final feedbackList = await DatabaseHelper.getFeedback(); // Fetch all feedback from the database
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 16,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Submitted Feedback",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Displaying all feedback
+                  feedbackList.isEmpty
+                      ? const Text("No feedback submitted yet.")
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: feedbackList.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                feedbackList[index]['feedback'] ?? "No feedback",
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            );
+                          },
+                        ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: const Text("Close"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -139,11 +200,19 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // Feedback Button
+            // Provide Feedback Button
             Center(
               child: ElevatedButton(
                 onPressed: () => showFeedbackForm(context), // Show the feedback form when pressed
                 child: const Text('Provide Feedback'),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // View Submitted Feedback Button
+            Center(
+              child: ElevatedButton(
+                onPressed: () => showFeedbackList(context), // Show the feedback list when pressed
+                child: const Text('See Submitted Feedback'),
               ),
             ),
           ],
