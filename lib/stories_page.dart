@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class StoriesPage extends StatefulWidget {
+  const StoriesPage({super.key});
+
   @override
   _StoriesPageState createState() => _StoriesPageState();
 }
@@ -14,17 +16,27 @@ class _StoriesPageState extends State<StoriesPage> {
     {
       'title': 'The Brave Little Lion',
       'content': 'Once upon a time in the jungle, there was a small lion who... Once upon a time in the jungle, there was a small lion who...',
-      'image': 'https://example.com/lion_image.jpg',
+      'image': 'assets/mtnshadow.jpg',
     },
     {
       'title': 'The Curious Rabbit',
       'content': 'In a quiet forest, a rabbit loved to explore. One day...',
-      'image': 'https://example.com/rabbit_image.jpg',
+      'image': 'assets/mtnshadow.jpg',
     },
     {
       'title': 'The Kind Elephant',
       'content': 'An elephant known for her kindness helped all the animals in the jungle...',
-      'image': 'https://example.com/elephant_image.jpg',
+      'image': 'assets/mtnshadow.jpg',
+    },
+    {
+      'title': 'Whatever bro Kind Elephant',
+      'content': 'tesitngisifjsfsakflasfhlakehfijhasifjaifjaijiaj',
+      'image': 'assets/mtnshadow.jpg',
+    },
+    {
+      'title': 'Whatever bro Kind Elephant',
+      'content': 'tesitngisifjsfsakflasfhlakehfijhasifjaifjaijiaj',
+      'image': 'assets/mtnshadow.jpg',
     },
   ];
 
@@ -38,7 +50,7 @@ class _StoriesPageState extends State<StoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Stories')),
+      appBar: AppBar(title: const Text('Stories')),
       body: ListView.builder(
         itemCount: stories.length,
         itemBuilder: (context, index) {
@@ -55,11 +67,11 @@ class _StoriesPageState extends State<StoriesPage> {
                 children: [
                   // Image
                   ClipRRect(
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
                     ),
-                    child: Image.network(
+                    child: Image.asset(
                       story['image']!,
                       height: 200,
                       width: double.infinity,
@@ -94,7 +106,7 @@ class _StoriesPageState extends State<StoriesPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () => _speakStory(story['content']!),
-                      child: Text('Read Aloud'),
+                      child: const Text('Read Aloud'),
                     ),
                   ),
                 ],

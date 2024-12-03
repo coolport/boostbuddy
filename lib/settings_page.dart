@@ -1,50 +1,8 @@
-// import 'package:flutter/material.dart';
-
-// class SettingsPage extends StatelessWidget {
-//   const SettingsPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('BoostBuddy'),
-//       ),
-//       body: ListView(
-//         padding: const EdgeInsets.all(16.0),
-//         children: [
-//           const Text(
-//             'Settings',
-//             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//           ),
-//           const SizedBox(height: 10),
-//           SwitchListTile(
-//             title: const Text('Enable Notifications'),
-//             value: true, // Replace with a stateful variable if needed
-//             onChanged: (bool value) {
-//               // Add functionality here
-//             },
-//           ),
-//           ListTile(
-//             title: const Text('Change Theme Color'),
-//             onTap: () {
-//               // Add functionality here
-//             },
-//           ),
-//           ListTile(
-//             title: const Text('Manage Account'),
-//             onTap: () {
-//               // Add functionality here
-//             },
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'database_helper.dart'; // Assuming this helper class has a method to store feedback
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -59,7 +17,7 @@ class SettingsPage extends StatelessWidget {
         0,
         "Test Notification",
         "This is a test notification",
-        NotificationDetails(
+        const NotificationDetails(
           android: AndroidNotificationDetails(
             'test_channel',
             'Test Notifications',
@@ -72,6 +30,8 @@ class SettingsPage extends StatelessWidget {
 
     // Function to show the feedback form
     void showFeedbackForm(BuildContext context) {
+      final feedbackController = TextEditingController(); // Controller for the feedback input
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -95,6 +55,7 @@ class SettingsPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   TextField(
+                    controller: feedbackController,
                     maxLines: 5,
                     decoration: InputDecoration(
                       hintText: "Write your feedback here...",
@@ -108,8 +69,12 @@ class SettingsPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          // You can process the feedback here (e.g., send it to a server)
+                        onPressed: () async {
+                          String feedback = feedbackController.text.trim();
+                          if (feedback.isNotEmpty) {
+                            // Save the feedback to the database
+                            await DatabaseHelper.insertFeedback(feedback);
+                          }
                           Navigator.of(context).pop(); // Close the dialog
                         },
                         child: const Text("Submit"),
@@ -187,6 +152,4 @@ class SettingsPage extends StatelessWidget {
     );
   }
 }
-
-
 

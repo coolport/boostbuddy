@@ -4,6 +4,7 @@ import 'app_state.dart';
 import 'quote_fetch.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'database_helper.dart';  // Import the DatabaseHelper
 
 class MotivatorHomePage extends StatefulWidget {
   const MotivatorHomePage({super.key});
@@ -95,7 +96,7 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
           ),
           Expanded(
             flex: 3,
-            child: HabitTracker(),
+            child: HabitTracker(), // Now uses HabitTracker widget
           ),
         ],
       ),
@@ -157,7 +158,26 @@ class _MotivatorHomePageState extends State<MotivatorHomePage> {
   }
 }
 
-class HabitTracker extends StatelessWidget {
+class HabitTracker extends StatefulWidget {
+  const HabitTracker({super.key});
+
+  @override
+  _HabitTrackerState createState() => _HabitTrackerState();
+}
+
+class _HabitTrackerState extends State<HabitTracker> {
+  @override
+  void initState() {
+    super.initState();
+    _loadHabits();
+  }
+
+  // Load habits from the database
+  Future<void> _loadHabits() async {
+    final habits = await DatabaseHelper.getHabits();
+    context.read<AppState>().updateHabits(habits);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
@@ -181,7 +201,7 @@ class HabitTracker extends StatelessWidget {
                   leading: const Icon(Icons.notifications),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
-                    onPressed: () => appState.removeHabit(index),
+                    onPressed: () => _removeHabit(appState.habits[index]['title']),
                   ),
                   onTap: () async {
                     DateTime? selectedTime = await _pickTime(context);
@@ -222,7 +242,7 @@ class HabitTracker extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          context.read<AppState>().addHabit(textController.text);
+                          _addHabit(textController.text);
                           Navigator.of(context).pop();
                         },
                         child: const Text('Add'),
@@ -239,6 +259,19 @@ class HabitTracker extends StatelessWidget {
     );
   }
 
+  // Add a habit to the database
+  Future<void> _addHabit(String habitTitle) async {
+    await DatabaseHelper.insertHabit(habitTitle, false);
+    _loadHabits(); // Reload the habits from the database
+  }
+
+  // Remove a habit from the database
+  Future<void> _removeHabit(String habitTitle) async {
+    await DatabaseHelper.removeHabit(habitTitle);
+    _loadHabits(); // Reload the habits from the database
+  }
+
+  // Time picker for scheduling notifications
   Future<DateTime?> _pickTime(BuildContext context) async {
     final now = DateTime.now();
     final time = await showTimePicker(
