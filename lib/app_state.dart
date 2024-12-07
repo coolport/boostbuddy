@@ -14,6 +14,7 @@ class AppState extends ChangeNotifier {
 
   // Habits management
   List<Map<String, dynamic>> habits = [
+    // add starter / example items. can be deleted later on
     {'title': 'Exercise for 30 mins', 'isChecked': false},
     {'title': 'Fetch dynamic background images', 'isChecked': false},
     {'title': 'Change AppBar to add Stories tab', 'isChecked': false},
